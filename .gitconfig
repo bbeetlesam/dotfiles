@@ -1,5 +1,5 @@
 [user]
-    email = samsismines@gmail.com
+    email = 185041685+bbeetlesam@users.noreply.github.com
     name = bbeetlesam
 
 [init]
@@ -11,6 +11,7 @@
 [color]
     ui = auto
 
+# pls dont judge my aliases
 [alias]
     cm = commit -m
     cam = commit -am
