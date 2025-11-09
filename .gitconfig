@@ -1,0 +1,23 @@
+[user]
+    email = samsismines@gmail.com
+    name = bbeetlesam
+
+[init]
+    defaultBranch = main
+
+[core]
+    editor = nvim
+
+[color]
+    ui = auto
+
+[alias]
+    cm = commit -m
+    cam = commit -am
+    ps = push -u origin HEAD
+    pl = pull
+    fe = fetch
+    st = status -v
+    sts = status -sb
+    co = checkout
+    lga = log --all --decorate --oneline --graph
