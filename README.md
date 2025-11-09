@@ -6,8 +6,9 @@ If you want to use my configs, go ahead, but caution:\
 It's not well made, and it could be broken on you.\
 Use them on full responsibility.
 
-## Contents
+## Contents (Configs List)
 
 - Neovim (contains both local and Lazy plugin config)
+- Git
 
 That's it. Goodbye folks.
