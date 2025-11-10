@@ -1,0 +1,12 @@
+# gitignore for /bspwm
+
+# folders
+alacritty
+kitty
+scripts
+themes
+
+# files
+dunstrc
+picom.conf
+xsettingsd
