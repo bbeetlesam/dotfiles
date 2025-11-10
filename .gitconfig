@@ -22,3 +22,4 @@
     sts = status -sb
     co = checkout
     lga = log --all --decorate --oneline --graph
+    unstage = restore --staged
