@@ -4,7 +4,7 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="archcraft"
 CASE_SENSITIVE="true"
 
-zstyle ':omz:update' mode reminder
+# zstyle ':omz:update' mode reminder
 
 # ENABLE_CORRECTION="true"
 
@@ -39,11 +39,29 @@ add-zsh-hook -Uz precmd rehash_precmd
 
 # aliases
 alias reloadzsh="source ~/.zshrc"
-alias zshconfig="nvim ~/.zshrc"
+alias configzsh="nvim ~/.zshrc"
 
 # exports
-export PATH=$PATH:/home/samudra/.spicetify
+export PATH="$PATH:$HOME/.spicetify"
+export PATH="$PATH:$HOME/go/bin"
+export PATH="$HOME/.local/bin:$PATH"
+
+export EDITOR="nvim -u NONE"
 export DOTF=/home/samudra/github/dotfiles
+export NVIM=/home/samudra/github/dotfiles/.config/nvim
+export CODING=/home/samudra/coding
+export DUMP=/home/samudra/DUMPS
 
 # my sincere greetings to me
-echo "Hello, this is ZSH. Welcome on the dark side of the moon."
+echo "We're in ZSH. Welcome to the dark side of the moon."
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# pnpm config (auto)
+export PNPM_HOME="/home/samudra/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
