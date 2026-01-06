@@ -16,7 +16,7 @@
     cm = commit -m
     cam = commit -am
     came = commit --amend --no-edit
-    ps = push -u origin HEAD
+    ps = "!f() { git push -u ${1:-origin} HEAD; }; f"
     pl = pull
     fe = fetch
     st = status -v
