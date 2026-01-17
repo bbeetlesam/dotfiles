@@ -13,7 +13,11 @@ HIST_STAMPS="yyyy-mm-dd"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-plugins=(git)
+# plugins
+plugins=(
+  git zsh-autosuggestions fast-syntax-highlighting zsh-history-substring-search
+  sudo z themes dirhistory copypath golang zsh-interactive-cd
+)
 
 # run oh my zsh on startup
 source $ZSH/oh-my-zsh.sh
@@ -40,17 +44,24 @@ add-zsh-hook -Uz precmd rehash_precmd
 # aliases
 alias reloadzsh="source ~/.zshrc"
 alias configzsh="nvim ~/.zshrc"
+alias fetch="fastfetch"
+alias lgit="lazygit"
+alias hist="history"
+alias confignvim="cd ~/.config/nvim/lua && nvim"
 
 # exports
-export PATH="$PATH:$HOME/.spicetify"
-export PATH="$PATH:$HOME/go/bin"
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:$HOME/.spicetify" # spicetify
+export PATH="$PATH:$HOME/go/bin" # go, GOOOO GLOBLE WOBLE
+export PATH="$HOME/.local/bin:$PATH" # locally installed bins
+export PATH="$PATH:$HOME/.turso" # turso cli
 
 export EDITOR="nvim -u NONE"
-export DOTF=/home/samudra/github/dotfiles
-export NVIM=/home/samudra/github/dotfiles/.config/nvim
-export CODING=/home/samudra/coding
-export DUMP=/home/samudra/DUMPS
+export VISUAL="nvim -u NONE"
+export DOTF="$HOME/github/dotfiles"
+export NVIM="$HOME/github/dotfiles/.config/nvim"
+export CODE="$HOME/coding"
+export DUMP="$HOME/DUMPS"
+export ENV="$HOME/.env"
 
 # my sincere greetings to me
 echo "We're in ZSH. Welcome to the dark side of the moon."
