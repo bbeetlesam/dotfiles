@@ -54,11 +54,16 @@ export CODE="$HOME/coding"
 export DUMP="$HOME/DUMPS"
 export ENV="$HOME/.env"
 
+# jdk (full java, + jre full not headless)
+# using v21 for alice (also have v25)
+export JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
+
 export PATH="$PATH:$HOME/.spicetify" # spicetify
 export PATH="$PATH:$HOME/go/bin" # go, GOOOO GLOBLE WOBLE
 export PATH="$HOME/.local/bin:$PATH" # locally installed bins
 export PATH="$PATH:$HOME/.turso" # turso cli
 export PATH="$PATH:$HOME/.cargo/bin" # rusty cargo
+export PATH="$PATH:$JAVA_HOME/bin"
 
 # my sincere greetings to me
 echo "We're in ZSH. Welcome to the dark side of the moon."
