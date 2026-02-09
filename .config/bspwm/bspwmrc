@@ -2,7 +2,7 @@
 
 ## Bspwm config directory
 BSPDIR="$HOME/.config/bspwm"
-
+ 
 ## Export bspwm/bin dir to PATH
 export PATH="${PATH}:$BSPDIR/scripts"
 export XDG_CURRENT_DESKTOP='bspwm'
@@ -12,54 +12,104 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 #wmname LG3D
 
 ## Bspwm colors
-BSPWM_FBC='#5294E2'
-BSPWM_NBC='#1E2128'
+BSPWM_FBC='#ff00ff'
+BSPWM_NBC='#ffffff'
 BSPWM_ABC='#C778DD'
 BSPWM_PFC='#98C379'
 
 ## Bspwm appearance
 BSPWM_BORDER='2'
-BSPWM_GAP='6'
+BSPWM_GAP='5'
 BSPWM_SRATIO='0.50'
 
-## default Setup (8 workspaces/desktops)
-default_workspaces() {
-	for monitor in `xrandr -q | grep -w 'connected' | cut -d' ' -f1`; do
-		bspc monitor "$monitor" -d '' '' '' '' '' '' '' ''
+## set workspace setup
+set_workspaces() {
+	# get list of connected monitors
+	monitors=($(xrandr -q | grep ' connected' | cut -d' ' -f1))
+	monitor_count=${#monitors[@]}
+	
+	# workspaces
+	#workspaces=('' '' '󰈹' '' '' '' '' '' '' '')
+	#workspaces=('󱓻' '󱓻' '󱓻' '󱓻' '󱓻' '󱓻' '󱓻' '󱓻' '󱓻' '󱓻')
+	#workspaces=('󰼏' '󰼐' '󰼑' '󰼒' '󰼓' '󰼔' '󰼕' '󰼖' '󰼗' '󰿪')
+	#workspaces=('󰎥', '󰎨', '󰎫', '󰎲', '󰎯', '󰎴', '󰎷', '󰎺', '󰎽', '󰿫')
+  workspaces=(1 2 3 4 5 6 7 8 9 10)
+	total_workspaces=${#workspaces[@]}
+	
+	# calculate desktops per monitor
+	desktops_per_monitor=$((total_workspaces / monitor_count))
+	
+	# assign desktops to each monitor
+	for i in "${!monitors[@]}"; do
+		start=$((i * desktops_per_monitor))
+		end=$((start + desktops_per_monitor))
+		
+		# get the workspace slice for this monitor
+		monitor_workspaces=("${workspaces[@]:$start:$desktops_per_monitor}")
+		
+		# apply to monitor
+		bspc monitor "${monitors[$i]}" -d "${monitor_workspaces[@]}"
 	done
+	
+	# set monitor order (primary first)
+	bspc wm -O "${monitors[@]}"
 }
 
-## Two Monitors Setup (Laptop and external monitor, set 4 workspaces on each monitor)
-two_monitors_workspaces() {
-	# change these values according to your system
-	# you can use `xrandr -q` to get the names of monitors
-	INTERNAL_MONITOR="eDP"
-	EXTERNAL_MONITOR="HDMI-A-0"
-	if [[ $(xrandr -q | grep "${EXTERNAL_MONITOR} connected") ]]; then
-		bspc monitor "$EXTERNAL_MONITOR" -d '' '' '' ''
-		bspc monitor "$INTERNAL_MONITOR" -d '' '' '' ''
-		bspc wm -O "$EXTERNAL_MONITOR" "$INTERNAL_MONITOR"
-	else
-		bspc monitor "$INTERNAL_MONITOR" -d '' '' '' '' '' '' '' ''
-	fi
+set_workspaces2() {
+  # desired workspaces (symbols or names)
+  workspaces=('' '' '' '' '' '' '' '' '' '')
+  total_workspaces=${#workspaces[@]}
+
+  # wait for xrandr to show connected outputs (timeout after ~3s)
+  tries=0
+  while [ $tries -lt 15 ]; do
+    monitors=($(xrandr -q | awk '/ connected/ {print $1}'))
+    monitor_count=${#monitors[@]}
+    if [ $monitor_count -gt 0 ]; then break; fi
+    tries=$((tries+1))
+    sleep 0.2
+  done
+
+  # fallback: if somehow zero, default to eDP-1
+  if [ $monitor_count -eq 0 ]; then
+    monitors=(eDP-1)
+    monitor_count=1
+  fi
+
+  # If more monitors than workspaces, give at least one workspace to first monitors
+  if [ $monitor_count -ge $total_workspaces ]; then
+    # assign one workspace per monitor until exhausted, rest remain empty
+    idx=0
+    for m in "${monitors[@]}"; do
+      if [ $idx -lt $total_workspaces ]; then
+        bspc monitor "$m" -d "${workspaces[$idx]}"
+        idx=$((idx+1))
+      else
+        # no workspace left, create an empty named desktop to avoid errors
+        bspc monitor "$m" -d "_"
+      fi
+    done
+  else
+    # distribute workspaces fairly, give the first monitors the extra remainder
+    base=$(( total_workspaces / monitor_count ))
+    rem=$(( total_workspaces % monitor_count ))
+    idx=0
+    for i in "${!monitors[@]}"; do
+      m="${monitors[$i]}"
+      count=$base
+      if [ $i -lt $rem ]; then count=$((count+1)); fi
+      slice=("${workspaces[@]:$idx:$count}")
+      bspc monitor "$m" -d "${slice[@]}"
+      idx=$((idx+count))
+    done
+  fi
+
+  # set monitor order so bspwm sees them in the same order xrandr listed
+  bspc wm -O "${monitors[@]}"
 }
 
-## Three Monitors Setup (Laptop and two external monitor, 3-2-3 workspaces)
-three_monitors_workspaces() {
-	# again, change these values accordingly
-	MONITOR_1="eDP"
-	MONITOR_2="HDMI-A-0"
-	MONITOR_3="HDMI-A-1"
-	bspc monitor "$MONITOR_1" -d '' ''
-	bspc monitor "$MONITOR_2" -d '' '' ''
-	bspc monitor "$MONITOR_3" -d '' '' ''
-	bspc wm -O "$MONITOR_2" "$MONITOR_1" "$MONITOR_3"
-}
-
-## Uncomment only one function according to your needs
-default_workspaces
-#two_monitors_workspaces
-#three_monitors_workspaces
+## apply desktop/workspace
+set_workspaces
 
 ## Apply bspwm configurations
 bspc config border_width "$BSPWM_BORDER"
@@ -86,49 +136,39 @@ bspc wm --adopt-orphans
 ## remove all rules first
 bspc rule -r *:*
 
-## 1 > terminal (always open terminal on workspace-1)
-bspc rule -a Alacritty desktop='^1' follow=on focus=on
-bspc rule -a Xfce4-terminal desktop='^1' follow=on focus=on
-
-## 2 > web (always open web browser on workspace-2)
-bspc rule -a firefox desktop='^2' follow=on focus=on
-bspc rule -a chromium desktop='^2' follow=on focus=on
-
-## 3 > files (always open file manager on workspace-3)
-declare -a files=(Pcmanfm Thunar qBittorrent)
-for i in ${files[@]}; do
-   bspc rule -a $i desktop='^3' follow=on focus=on; done
-
-## 4 > code (always open editors on workspace-4)
-declare -a code=(Geany code-oss)
-for i in ${code[@]}; do
-   bspc rule -a $i desktop='^4' follow=on focus=on; done
-
-## 5 > office and docs (always open office/doc apps on workspace-5)
-declare -a office=(Gucharmap Atril Evince \
-libreoffice-writer libreoffice-calc libreoffice-impress \
-libreoffice-startcenter libreoffice Soffice *:libreofficedev *:soffice)
-for i in ${office[@]}; do
-   bspc rule -a $i desktop='^5' follow=on focus=on; done
-
-## 6 > communication (always open communication apps on workspace-6)
-declare -a comm=(Thunderbird TelegramDesktop Hexchat)
-for i in ${comm[@]}; do
-   bspc rule -a $i desktop='^6' follow=on focus=on; done
-
-## 7 > media (always open media apps on workspace-7)
-declare -a media=(Audacity Music MPlayer Lxmusic Inkscape Gimp-2.10 obs)
-for i in ${media[@]}; do
-   bspc rule -a $i desktop='^7' state=floating follow=on focus=on; done
-
-## 8 > system (always open system apps on workspace-8)
-bspc rule -a 'VirtualBox Manager' desktop='^8' follow=on focus=on
-bspc rule -a GParted desktop='^8' follow=on focus=on
-declare -a settings=(Lxappearance Lxtask Lxrandr Arandr \
-System-config-printer.py Pavucontrol Exo-helper-1 \
-Xfce4-power-manager-settings)
-for i in ${settings[@]}; do
-   bspc rule -a $i desktop='^8' state=floating follow=on focus=on; done
+## 3 > web/browser 
+#declare -a files=(firefox chromium)
+#for i in ${files[@]}; do
+#   bspc rule -a $i desktop='^3' follow=on focus=on;
+#done
+#
+### 4 > discord
+#bspc rule -a discord desktop='^4' follow=on focus=on;
+#
+### 5 > spotify or any music app
+#declare -a office=(Spotify)
+#for i in ${office[@]}; do
+#   bspc rule -a $i desktop='^5' follow=on focus=on;
+#done
+#
+### 6 > communication (always open communication apps on workspace-6)
+#declare -a comm=(Thunderbird TelegramDesktop Hexchat)
+#for i in ${comm[@]}; do
+#   bspc rule -a $i desktop='^6' follow=on focus=on; done
+#
+### 7 > media
+#declare -a media=(Audacity Music MPlayer Lxmusic Inkscape Gimp-2.10 obs)
+#for i in ${media[@]}; do
+#   bspc rule -a $i desktop='^7' state=floating follow=on focus=on; done
+#
+### 8 > system (always open system apps on workspace-8)
+#bspc rule -a 'VirtualBox Manager' desktop='^8' follow=on focus=on
+#bspc rule -a GParted desktop='^8' follow=on focus=on
+#declare -a settings=(Lxappearance Lxtask Lxrandr Arandr \
+#System-config-printer.py Pavucontrol Exo-helper-1 \
+#Xfce4-power-manager-settings)
+#for i in ${settings[@]}; do
+#   bspc rule -a $i desktop='^8' state=floating follow=on focus=on; done
 
 ## Always Floating Apps
 declare -a floating=(alacritty-float kitty-float Pcmanfm Thunar Onboard Yad 'Firefox:Places' \

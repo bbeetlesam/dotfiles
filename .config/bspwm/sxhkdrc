@@ -38,7 +38,7 @@ super + shift + {f,w,e}
 
 # Terminal Apps
 ctrl + alt + {v,r,h}
-	alacritty --config-file ~/.config/bspwm/alacritty/alacritty.toml -e {vim,ranger,htop}
+	alacritty --config-file ~/.config/bspwm/alacritty/alacritty.toml -e {nvim,ranger,htop}
 
 # Color Picker
 super + p
@@ -51,6 +51,9 @@ ctrl + alt + m
 # Lockscreen
 ctrl + alt + l
     betterlockscreen --lock
+    
+super + shift + l
+    betterlockscreen -l
 
 ##---------- System Keys ----------##
 
@@ -105,20 +108,20 @@ ctrl + alt + Escape
     xkill
 
 # Quit/Restart bspwm
-ctrl + shift + {q,r}
+super + shift + {q,r}
 	bspc {quit,wm -r}
 	
 # Reload Keybindings
 super + Escape
-	pkill -USR1 -x sxhkd
+	pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config' 'bruh'
 
 # Switch workspace
 ctrl + alt + {Left,Right}
 	bspc desktop -f {prev.local,next.local}
 
 # Switch workspace or Send focused Node to another workspace
-super + {_,shift + }{1-8}
-	bspc {desktop -f,node -d} '^{1-8}' '--follow'
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}' '--follow'
 
 # Send focused Node to workspace directionally
 super + ctrl + shift + {Left,Right}
@@ -169,7 +172,6 @@ super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
 # Change focus to next window, including floating window
-
 	bspc node -f {next.local,prev.local}
 
 # Switch to last opened workspace

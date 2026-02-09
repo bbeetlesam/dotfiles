@@ -1,5 +1,3 @@
-## Copyright (C) 2020-2025 Aditya Shakya <adi1090x@gmail.com>
-##
 ## Configuration for Alacritty, the GPU enhanced terminal emulator.
 ## It's a very basic and simple config file, for full configuration, Run `man 5 alacritty`
 
@@ -7,7 +5,10 @@
 
 [general]
 ## Import additional configuration files.
-import = ["~/.config/alacritty/colors.toml", "~/.config/alacritty/fonts.toml"]
+import = [
+  "~/.config/alacritty/colorschemes/pick/nightfly.toml",
+  "~/.config/alacritty/fonts.toml"
+]
 
 ## You can set shell.program to the path of your favorite shell, e.g. /bin/zsh.
 ## Entries in shell.args are passed as arguments to the shell.
@@ -50,15 +51,15 @@ lines = 24
 
 ## Blank space added around the window in pixels.
 [window.padding]
-x = 12
-y = 12
+x = 4
+y = 0
 
 ## SCROLLING ------------------------------------------------------
 [scrolling]
-history = 10000
-multiplier = 3
+history = 5000
+multiplier = 2
 
-## BELL -----------------------------------------------------------
+## BELL --------:---------------------------------------------------
 [bell]
 animation = "Linear"
 duration = 20
@@ -73,8 +74,8 @@ save_to_clipboard = true
 vi_mode_style = "None"
 blink_interval = 750
 blink_timeout = 5
-unfocused_hollow = false
-thickness = 0.15
+unfocused_hollow = true
+thickness = 0.1
 
 [cursor.style]
 shape = "Block"
