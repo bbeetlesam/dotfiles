@@ -1,28 +1,24 @@
 # path to oh my zsh
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="archcraft"
+ZSH_THEME="af-magic-custom"
 CASE_SENSITIVE="true"
 
-# zstyle ':omz:update' mode reminder
-
-# ENABLE_CORRECTION="true"
+# zsh autocorrect
+ENABLE_CORRECTION="true"
+export SPROMPT="zsh: correct to %r [nyae]? " # %R for the wrong command
 
 HIST_STAMPS="yyyy-mm-dd"
 
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# plugins
+# oh-my-zsh plugins
 plugins=(
-  git zsh-autosuggestions fast-syntax-highlighting zsh-history-substring-search
-  sudo z themes dirhistory copypath golang zsh-interactive-cd
+  zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search
+  sudo z themes dirhistory copypath golang zsh-interactive-cd copybuffer
+  copyfile copypath command-not-found
 )
 
-# run oh my zsh on startup
+# run oh-my-zsh on startup
 source $ZSH/oh-my-zsh.sh
-
-# export MANPATH="/usr/local/man:$MANPATH"
 
 # On-demand rehash
 zshcache_time="$(date +%s%N)"
@@ -44,19 +40,20 @@ add-zsh-hook -Uz precmd rehash_precmd
 # aliases
 alias reloadzsh="source ~/.zshrc"
 alias configzsh="nvim ~/.zshrc"
+alias confignvim="nvim +':Dashboard'"
 alias fetch="fastfetch"
 alias lgit="lazygit"
 alias hist="history"
-alias confignvim="cd ~/.config/nvim/lua && nvim"
 
 # exports
 export PATH="$PATH:$HOME/.spicetify" # spicetify
 export PATH="$PATH:$HOME/go/bin" # go, GOOOO GLOBLE WOBLE
 export PATH="$HOME/.local/bin:$PATH" # locally installed bins
 export PATH="$PATH:$HOME/.turso" # turso cli
+export PATH="$PATH:$HOME/.cargo/bin" # rusty cargo
 
 export EDITOR="nvim -u NONE"
-export VISUAL="nvim -u NONE"
+export VISUAL="nvim"
 export DOTF="$HOME/github/dotfiles"
 export NVIM="$HOME/github/dotfiles/.config/nvim"
 export CODE="$HOME/coding"
