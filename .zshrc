@@ -46,12 +46,6 @@ alias lgit="lazygit"
 alias hist="history"
 
 # exports
-export PATH="$PATH:$HOME/.spicetify" # spicetify
-export PATH="$PATH:$HOME/go/bin" # go, GOOOO GLOBLE WOBLE
-export PATH="$HOME/.local/bin:$PATH" # locally installed bins
-export PATH="$PATH:$HOME/.turso" # turso cli
-export PATH="$PATH:$HOME/.cargo/bin" # rusty cargo
-
 export EDITOR="nvim -u NONE"
 export VISUAL="nvim"
 export DOTF="$HOME/github/dotfiles"
@@ -59,6 +53,12 @@ export NVIM="$HOME/github/dotfiles/.config/nvim"
 export CODE="$HOME/coding"
 export DUMP="$HOME/DUMPS"
 export ENV="$HOME/.env"
+
+export PATH="$PATH:$HOME/.spicetify" # spicetify
+export PATH="$PATH:$HOME/go/bin" # go, GOOOO GLOBLE WOBLE
+export PATH="$HOME/.local/bin:$PATH" # locally installed bins
+export PATH="$PATH:$HOME/.turso" # turso cli
+export PATH="$PATH:$HOME/.cargo/bin" # rusty cargo
 
 # my sincere greetings to me
 echo "We're in ZSH. Welcome to the dark side of the moon."
